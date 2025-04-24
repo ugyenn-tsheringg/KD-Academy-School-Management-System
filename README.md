@@ -4,6 +4,10 @@ The KD Academy School Management System is a web-based platform that helps manag
 🔗 Live Demo: KD Academy School Management System
 Note: This is a front-end preview only. Since the backend relies on a MySQL database, most dynamic functionalities are not operational in the live GitHub Pages environment.
 
+Since the deno video file size is large, you can visit my linkedin post to view the video demo (4 mins long) 
+Video Demo: https://www.linkedin.com/posts/welcometougyentsheringpage_webdesign-schoolwebsite-webdevelopment-activity-7307290074310750208-bbYC?utm_source=share&utm_medium=member_desktop&rcm=ACoAAET87i4Bs2rQnfeK9QBGyDxYOgiDmowOyBQ
+
+
 ## System Overview
 The system is a web-based application built with:
  ✅ Frontend: HTML, CSS, JavaScript, Bootstrap (for responsive design)
