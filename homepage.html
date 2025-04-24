@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KD - Learn on your schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: #e3f2fd;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4070f4;
+            position: relative;
+        }
+        .logo img{
+            height: 50px;
+        }
+        .logo i {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 32px;
+            color: black;
+        }
+
+        .logo .cap-position {
+            position: absolute;
+            top: -15px;
+            left: 28px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #707070;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #4070f4;
+        }
+
+        .sign-in-btn {
+            background-color: #4070f4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sign-in-btn:hover {
+            background-color: #3560d0;
+        }
+
+        .hero {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 50px;
+            background-color: #e3f2fd;
+            margin-top: -20px;
+        }
+
+        .hero-left {
+            max-width: 50%;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4070f4;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-title span {
+            color: #707070;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #707070;
+            margin-bottom: 30px;
+        }
+
+        .register-btn {
+            background-color: #4070f4;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background-color: #3560d0;
+        }
+
+        .hero-right {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 45%;
+        }
+
+        .student-image {
+            width: 48%;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .student-image img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .student-image:nth-child(3) {
+            width: 98%;
+        }
+
+        /* Developers Modal */
+
+        .developers-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .developers-modal.active {
+            display: block;
+        }
+
+        .developers-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 40px;
+            max-width: 1200px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #707070;
+        }
+
+        .developers-title {
+            text-align: center;
+            font-size: 36px;
+            color: #4070f4;
+            margin-bottom: 40px;
+        }
+
+        .developers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .developer-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .developer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .developer-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 3px solid #4070f4;
+        }
+
+        .developer-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .developer-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4070f4;
+            margin-bottom: 10px;
+        }
+
+        .developer-role {
+            font-size: 16px;
+            color: #707070;
+            margin-bottom: 15px;
+        }
+
+        .developer-bio {
+            font-size: 14px;
+            color: #707070;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .developers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .developers-content {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="img/logo.png" alt="logo">
+        </div>
+        <nav class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#" id="developers-link">Developers</a>
+        </nav>
+        <button class="sign-in-btn">Sign in</button>
+    </header>
+    <hr style="position: relative; border: none; height: 1px; background: rgba(0, 0, 0, 0.1); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    <main class="hero">
+        <div class="hero-left">
+            <h1 class="hero-title">
+                <span>Learn</span> on your<br>schedule
+            </h1>
+            <p class="hero-subtitle">Anywhere, anytime. Start learning today!</p>
+            <button class="register-btn">Register here!</button>
+        </div>
+
+        <div class="hero-right">
+            <div class="student-image">
+                <img src="img/image_Kdhomepage1.jpg" alt="Student with books">
+            </div>
+            <div class="student-image">
+                <img src="img/image_Kdhomepage2.jpg" alt="Student studying">
+            </div>
+            <div class="student-image">
+                <img src="img/image_Kdhomepage3.jpg" alt="Student with notebook">
+            </div>
+        </div>
+    </main>
+
+    <div class="developers-modal" id="developers-modal">
+        <div class="developers-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="developers-title">Meet Our Development Team</h2>
+            <div class="developers-grid">
+                <div class="developer-card">
+                    <div class="developer-image">
+                        <img src="img/cat001.jpeg.jpg" alt="Developer 1">
+                    </div>
+                    <h3 class="developer-name">John Smith</h3>
+                    <p class="developer-role">Lead Developer</p>
+                    <p class="developer-bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+
+                <div class="developer-card">
+                    <div class="developer-image">
+                        <img src="img/cat002.jpeg.jpg" alt="Developer 2">
+                    </div>
+                    <h3 class="developer-name">Sarah Johnson</h3>
+                    <p class="developer-role">Frontend Developer</p>
+                    <p class="developer-bio">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+
+                <div class="developer-card">
+                    <div class="developer-image">
+                        <img src="img/cat003.jpeg.jpg" alt="Developer 3">
+                    </div>
+                    <h3 class="developer-name">Michael Chen</h3>
+                    <p class="developer-role">Backend Developer</p>
+                    <p class="developer-bio">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                </div>
+
+                <div class="developer-card">
+                    <div class="developer-image">
+                        <img src="img/cat004.jpeg.jpg" alt="Developer 4">
+                    </div>
+                    <h3 class="developer-name">Emma Davis</h3>
+                    <p class="developer-role">UI/UX Designer</p>
+                    <p class="developer-bio">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+
+                <div class="developer-card">
+                    <div class="developer-image">
+                        <img src="img/cat005.jpeg.jpg" alt="Developer 5">
+                    </div>
+                    <h3 class="developer-name">Alex Turner</h3>
+                    <p class="developer-role">Full Stack Developer</p>
+                    <p class="developer-bio">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const developersLink = document.getElementById('developers-link');
+            const developersModal = document.getElementById('developers-modal');
+            const closeModal = document.querySelector('.close-modal');
+
+            developersLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                developersModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeModal.addEventListener('click', function() {
+                developersModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === developersModal) {
+                    developersModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            const registerBtn = document.querySelector('.register-btn');
+            registerBtn.addEventListener('click', function() {
+                console.log('Register clicked');
+            });
+
+            const signInBtn = document.querySelector('.sign-in-btn');
+            signInBtn.addEventListener('click', function() {
+                console.log('Sign in clicked');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form id="signUpForm" action="login.php" method="POST">
+                <h1>Create Account</h1>
+                <span>or use your email for registration</span>
+                <hr>
+                <input type="text" id="name" name="name" placeholder="Name" />
+                <input type="email" id="email" name="email" placeholder="Email" />
+                <input type="password" id="password" name="password" placeholder="Password" />
+                <input type="text" id="programme" name="programme" placeholder="Programme">
+                <input type="hidden" id="userType" name="user_type" value="">
+                <div id="studentFields"></div>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form action="login.php" method="POST">
+                <h1>Sign in</h1>
+                <span>or use your account</span>
+                <hr>
+                <input type="email" name="email" placeholder="Email" />
+                <input type="password" name="password" placeholder="Password" />
+                <a href="#">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start your journey with us</p>
+                    <button class="ghost" id="TeachersignUp">Sign Up as Teacher</button>
+                    <hr>
+                    <button class="ghost" id="StudentsignUp">Sign Up as Student</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const TeachersignUpButton = document.getElementById('TeachersignUp');
+        const StudentsignUpButton = document.getElementById('StudentsignUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container');
+        const studentFields = document.getElementById('studentFields');
+        const overlayLeft = document.querySelector('.overlay-panel.overlay-left h1');
+        const overlayLeftParagraph = document.querySelector('.overlay-panel.overlay-left p');
+        const userTypeInput = document.getElementById('userType');
+
+        TeachersignUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+            studentFields.innerHTML = "";
+            overlayLeft.textContent = "Welcome, Teacher!";
+            overlayLeftParagraph.textContent = "To manage your account, please sign in.";
+            userTypeInput.value = "Teacher";
+        });
+
+        StudentsignUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+            studentFields.innerHTML = `
+                <input type="date" id="dob" name="dob" placeholder="Date of Birth" required />
+                <input type="text" id="group" name="group" placeholder="Group A or B" />
+            `;
+            overlayLeft.textContent = "Welcome, Student!";
+            overlayLeftParagraph.textContent = "To access your account, please sign in.";
+            userTypeInput.value = "Student";
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+            overlayLeft.textContent = "Welcome Back!";
+            overlayLeftParagraph.textContent = "To keep connected with us please login with your personal info.";
+        });
+    </script>
+</body>
+</html>

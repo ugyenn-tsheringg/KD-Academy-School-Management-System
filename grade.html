@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grades Table</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f4f4f9, #e0e0f5);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px;
+            padding: 30px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .dropdown-container {
+            margin-bottom: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            background: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+        select:focus {
+            border-color: #007BFF;
+        }
+        .options-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .options-container button {
+            padding: 12px 24px;
+            margin: 5px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .options-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+        .grades-section {
+            display: none;
+            margin-top: 30px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        tr:hover {
+            background: #f1f1f1;
+            transition: background 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span id="studentName"></span></h1>
+            <p>Select a semester to view your grades:</p>
+        </div>
+        <div class="dropdown-container">
+            <select id="semesterDropdown" onchange="displayOptions()">
+                <option value="">Select a semester</option>
+            </select>
+        </div>
+        <div class="options-container" id="optionsContainer">
+            <button onclick="showPerformance('test')">Assignment</button>
+            <button onclick="showPerformance('quiz')">Project</button>
+            <button onclick="showPerformance('finalGrade')">Final Grade</button>
+        </div>
+        <div class="grades-section" id="gradesSection">
+            <h3 id="semesterTitle"></h3>
+            <table id="gradesTable">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Grades will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let studentData = null;
+
+        // Fetch student data from server on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('fetch_grades.php')
+                .then(response => response.json())
+                .then(data => {
+                    studentData = data;
+                    
+                    // Display student name
+                    document.getElementById("studentName").textContent = studentData.name;
+
+                    // Populate dropdown menu
+                    const dropdown = document.getElementById("semesterDropdown");
+                    dropdown.innerHTML = '<option value="">Select a semester</option>'; // Clear previous options
+                    studentData.grades.forEach(semester => {
+                        const option = document.createElement("option");
+                        option.value = semester.semester;
+                        option.textContent = semester.semester;
+                        dropdown.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching student data:', error);
+                    alert('Failed to load student data');
+                });
+        });
+
+        // Display options (Test, Quiz, Final Grade) after selecting a semester
+        function displayOptions() {
+            const dropdown = document.getElementById("semesterDropdown");
+            const selectedSemester = dropdown.value;
+            const optionsContainer = document.getElementById("optionsContainer");
+
+            if (selectedSemester) {
+                optionsContainer.style.display = "block";
+            } else {
+                optionsContainer.style.display = "none";
+                document.getElementById("gradesSection").style.display = "none";
+            }
+        }
+
+        // Show performance based on the selected option (Test, Quiz, Final Grade)
+        function showPerformance(type) {
+            const dropdown = document.getElementById("semesterDropdown");
+            const selectedSemester = dropdown.value;
+            const semesterData = studentData.grades.find(s => s.semester === selectedSemester);
+
+            if (semesterData) {
+                const gradesSection = document.getElementById("gradesSection");
+                const gradesTableBody = document.querySelector("#gradesTable tbody");
+                document.getElementById("semesterTitle").textContent = `${semesterData.semester} - ${type}`;
+                gradesTableBody.innerHTML = "";
+
+                semesterData.subjects.forEach(subject => {
+                    // Skip GPA and CGPA for Test and Quiz
+                    if ((type === 'test' || type === 'quiz') && (subject.name === 'GPA' || subject.name === 'CGPA')) {
+                        return;
+                    }
+
+                    // Only show GPA and CGPA for Final Grade
+                    if (type === 'finalGrade' || (subject.name !== 'GPA' && subject.name !== 'CGPA')) {
+                        const row = document.createElement("tr");
+                        const subjectCell = document.createElement("td");
+                        const gradeCell = document.createElement("td");
+
+                        subjectCell.textContent = subject.subject_name || subject.name;
+
+                        if (type === 'test') {
+                            gradeCell.textContent = subject.test;
+                        } else if (type === 'quiz') {
+                            gradeCell.textContent = subject.quiz;
+                        } else if (type === 'finalGrade') {
+                            gradeCell.textContent = subject.finalGrade || subject.final_grade;
+                        }
+
+                        row.appendChild(subjectCell);
+                        row.appendChild(gradeCell);
+                        gradesTableBody.appendChild(row);
+                    }
+                });
+
+                gradesSection.style.display = "block";
+            } else {
+                document.getElementById("gradesSection").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
